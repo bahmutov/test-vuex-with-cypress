@@ -1,7 +1,7 @@
 {
   "name": "test-vuex-with-cypress",
   "version": "1.0.0",
-  "description": "",
+  "description": "Example unit testing Vuex data store using Cypress E2E test runner",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,13 @@
   "dependencies": {
     "vue": "2.6.11",
     "vuex": "3.1.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahmutov/test-vuex-with-cypress.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bahmutov/test-vuex-with-cypress/issues"
+  },
+  "homepage": "https://github.com/bahmutov/test-vuex-with-cypress#readme"
 }
