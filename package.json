@@ -4,13 +4,15 @@
   "description": "Example unit testing Vuex data store using Cypress E2E test runner",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run",
+    "cypress:open": "cypress open"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "3.8.0"
+    "cypress": "3.8.0",
+    "prettier": "1.19.1"
   },
   "dependencies": {
     "vue": "2.6.11",
