@@ -98,7 +98,7 @@ describe('store actions', () => {
     store = storeFactory()
   })
 
-  it('can be async (fails)', () => {
+  it.skip('can be async (fails)', () => {
     store.dispatch('incrementAsync', 2)
     expect(store.state.count).to.equal(2)
   })
@@ -108,5 +108,91 @@ describe('store actions', () => {
     cy.wrap(store.state) // command
       .its('count') // command
       .should('equal', 2) // assertion
+  })
+})
+
+describe('spying on mutations', () => {
+  let store
+
+  beforeEach(function() {
+    store = storeFactory()
+    // save Vuex context in test object
+    this.context = store._modules.root.context
+  })
+
+  it('calls commit "increment" in the store', () => {
+    cy.spy(store._modules.root.context, 'commit').as('commit')
+    store.dispatch('incrementAsync', 2)
+    cy.wrap(store.state)
+      .its('count')
+      .should('equal', 2)
+    // we can also assert directly on the spies
+    // thanks for Sinon-Chai bundled with Cypress
+    // https://on.cypress.io/assertions#Sinon-Chai
+    cy.get('@commit').should('have.been.calledOnce')
+  })
+
+  it('spy retries assertion', () => {
+    cy.spy(store._modules.root.context, 'commit').as('commit')
+    store.dispatch('incrementAsync', 2)
+    store.dispatch('incrementAsync', 5)
+    cy.get('@commit').should('have.been.calledTwice')
+  })
+
+  it('spies on specific call', () => {
+    cy.spy(store._modules.root.context, 'commit')
+      .withArgs('increment', 5)
+      .as('commit5')
+    store.dispatch('incrementAsync', 2)
+    store.dispatch('incrementAsync', 5)
+    cy.get('@commit5').should('have.been.calledOnce')
+  })
+
+  it('incrementAsync calls increment mutation (mutations handler)', () => {
+    cy.spy(store._mutations.increment, '0').as('increment')
+    store.dispatch('incrementAsync', 2)
+    cy.wrap(store.state) // command
+      .its('count') // command
+      .should('equal', 2) // assertion
+  })
+
+  it('stubs increment commit', () => {
+    // allow all mutations to go through
+    // but ("increment", 5) will call our fake function
+    cy.stub(store._modules.root.context, 'commit')
+      .callThrough()
+      .withArgs('increment', 5)
+      .callsFake((name, n) => {
+        // confirm we are only stubbing increments by 5
+        expect(n).to.equal(5)
+        // call the original method, but pass a different value
+        store._modules.root.context.commit.wrappedMethod(name, 100)
+      })
+
+    store.dispatch('incrementAsync', 2)
+    store.dispatch('incrementAsync', 5)
+
+    // our stub will turn increment by 5 to increment by 100 😃
+    cy.wrap(store.state)
+      .its('count')
+      .should('equal', 102)
+  })
+
+  it('grabs context', function() {
+    // save created spy in local variable
+    const commit = cy.spy(this.context, 'commit')
+    store.dispatch('incrementAsync', 2)
+    // use Cypress retry-ability to wait for
+    // the spy to be called once
+    cy.wrap(commit).should('have.been.calledOnce')
+  })
+
+  it('uses alias', function() {
+    // save created spy as an alias
+    cy.spy(this.context, 'commit').as('commit')
+    store.dispatch('incrementAsync', 2)
+    // use Cypress retry-ability to wait for
+    // the spy to be called once
+    cy.get('@commit').should('have.been.calledOnce')
   })
 })

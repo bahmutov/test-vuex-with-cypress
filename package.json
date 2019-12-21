@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "cypress run",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "start": "parcel serve index.html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "cypress": "3.8.0",
+    "parcel-bundler": "1.12.4",
     "prettier": "1.19.1"
   },
   "dependencies": {
