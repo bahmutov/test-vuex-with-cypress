@@ -13,7 +13,7 @@ const actions = {
   incrementAsync({ commit }, n = 1) {
     setTimeout(() => {
       commit('increment', n)
-    }, 100)
+    }, 1000)
   },
 }
 

@@ -109,6 +109,13 @@ describe('store actions', () => {
       .its('count') // command
       .should('equal', 2) // assertion
   })
+
+  it('increments async by default value', () => {
+    store.dispatch('incrementAsync')
+    cy.wrap(store.state)
+      .its('count')
+      .should('equal', 1)
+  })
 })
 
 describe('spying on mutations', () => {
