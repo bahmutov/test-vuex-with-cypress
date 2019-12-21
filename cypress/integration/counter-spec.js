@@ -61,4 +61,52 @@ describe('store commits', () => {
   it('starts with zero again', () => {
     expect(store.state.count, 'initial value').to.equal(0)
   })
+
+  it('compares entire state object', () => {
+    expect(store.state).to.deep.equal({
+      count: 0,
+    })
+    // equivalent assertion
+    cy.wrap(store)
+      .its('state')
+      .should('deep.equal', {
+        count: 0,
+      })
+  })
+
+  it('saves objects like checkpoints', () => {
+    cy.wrap(store)
+      .its('state')
+      .then(Cypress._.cloneDeep)
+      .should('deep.equal', {
+        count: 0,
+      })
+    cy.wrap(store).invoke('commit', 'increment', 10)
+    cy.wrap(store)
+      .its('state')
+      .then(Cypress._.cloneDeep)
+      .should('deep.equal', {
+        count: 10,
+      })
+  })
+})
+
+describe('store actions', () => {
+  let store
+
+  beforeEach(() => {
+    store = storeFactory()
+  })
+
+  it('can be async (fails)', () => {
+    store.dispatch('incrementAsync', 2)
+    expect(store.state.count).to.equal(2)
+  })
+
+  it('can be async (passes)', () => {
+    store.dispatch('incrementAsync', 2)
+    cy.wrap(store.state) // command
+      .its('count') // command
+      .should('equal', 2) // assertion
+  })
 })

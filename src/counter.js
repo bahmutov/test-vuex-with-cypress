@@ -9,13 +9,23 @@ export const mutations = {
   },
 }
 
+const actions = {
+  incrementAsync({ commit }, n = 1) {
+    setTimeout(() => {
+      commit('increment', n)
+    }, 1000)
+  },
+}
+
 const counterStoreFactory = () => {
   const state = {
     count: 0,
   }
+
   return new Vuex.Store({
     state,
     mutations,
+    actions,
   })
 }
 export default counterStoreFactory
