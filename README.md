@@ -1,4 +1,4 @@
-# Test Vuex data store with Cypress
+# Test Vuex data store with Cypress ![test status](https://github.com/bahmutov/test-vuex-with-cypress/workflows/tests/badge.svg?branch=master)
 
 > Example unit testing Vuex data store using Cypress E2E test runner
 
